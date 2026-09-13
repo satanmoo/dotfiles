@@ -1,0 +1,16 @@
+[user]
+    name = satanmoo
+    email = gyo8270@gmail.com
+
+[commit]
+    gpgsign = true
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    allowedSignersFile = ~/.gitallowedsigners
+
+# Mac마다 다른 서명 키 경로는 저장소 밖에서 관리
+[include]
+    path = ~/.gitconfig-personal-local

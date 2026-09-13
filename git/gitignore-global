@@ -1,0 +1,6 @@
+.DS_Store
+
+# codex
+**/.codex/
+
+**/.claude/settings.local.json

@@ -1,0 +1,85 @@
+# 디렉토리별로 덮어씀
+# github desktop 자동 생성
+[user]
+#	name = <name> 
+#	email = <email>
+#   signkey = <signkey>
+
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore-global
+	autocrlf = false
+	quotepath = false
+	precomposeunicode = true
+
+[init]
+	defaultBranch = main
+
+[log]
+	date = iso8601
+
+[color]
+	ui = auto
+
+[fetch]
+	prune = true
+	prunetags = true
+
+[push]
+	default = simple
+
+[pull]
+	rebase = true
+
+[rebase]
+	autostash = true
+	autosquash = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[commit]
+	verbose = true
+	gpgsign = true
+
+[tag]
+	gpgsign = true
+
+[gpg]
+	format = ssh
+
+[credential]
+	helper = git-credential-cache
+
+[rerere]
+	enabled = true
+
+[help]
+	autocorrect = prompt
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+
+# 디렉토리별 계정 분리
+[includeIf "gitdir:~/work/dev/"]
+	path = ~/.gitconfig-dev
+
+[includeIf "gitdir:~/work/infra/"]
+	path = ~/.gitconfig-infra
+
+[includeIf "gitdir:~/personal/"]
+	path = ~/.gitconfig-personal
+
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[includeIf "gitdir:~/dotfiles/"]
+	path = ~/.gitconfig-personal

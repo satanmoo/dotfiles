@@ -1,0 +1,4 @@
+# ~/.gitconfig-personal-local로 복사한 뒤 실제 Secretive 공개키 경로로 교체
+# 이 예제 파일을 직접 include하지 않음
+[user]
+    signingkey = /absolute/path/to/your/Secretive/PublicKeys/KEY_ID.pub
