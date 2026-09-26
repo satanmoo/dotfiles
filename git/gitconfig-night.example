@@ -1,0 +1,19 @@
+# 야간 무인 작업 전용 Git 설정 (Secretive 야간 키)
+#
+# ~/.gitconfig-night 로 복사한 뒤 NIGHT_KEY_ID 를 실제 Secretive 공개키 이름으로 바꾼다.
+# 이 파일은 includeIf 로 자동 적용되지 않는다. 야간 래퍼만 자기 프로세스에 넣는다:
+#   GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=include.path GIT_CONFIG_VALUE_0=$HOME/.gitconfig-night git ...
+# 명령행 설정이라 includeIf 설정보다 우선한다. 낮 작업은 지금처럼 Touch ID 키를 쓴다.
+#
+# 야간 키: Secretive 에서 Touch ID(인증) 요구 없이 만든 Secure Enclave 키. 복사할 수 없다.
+# 로그인된 동안 같은 사용자의 프로세스가 조용히 쓸 수 있으므로 GitHub 에는
+#   - 푸시: 저장소 하나에만 쓰기 배포 키로 등록 (배포 키는 GitHub 전체에서 저장소 하나에만 붙는다)
+#   - 서명: 계정의 서명 키로 등록
+# 해서 영향 범위를 그 저장소로 좁힌다.
+
+[user]
+    signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/NIGHT_KEY_ID.pub
+
+[core]
+    # 이 키 하나만 쓰도록 고정한다(IdentitiesOnly). 에이전트는 Secretive 소켓.
+    sshCommand = ssh -o IdentityAgent=~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/NIGHT_KEY_ID.pub
