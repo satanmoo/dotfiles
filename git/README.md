@@ -61,12 +61,23 @@
 ```
 
 - **`[credential "https://github.com"]`**: 위 표의 세 번째 경우, 즉 HTTPS 주소인데 인증이 필요할 때 git이 비밀번호를 묻는 대신 gh에게 토큰을 받아 쓴다. 평소에는 거의 쓰이지 않는 보험이지만, 없으면 에이전트가 비밀번호 입력에서 멈춘다.
-  - **`helper =`(빈 값)**: Homebrew git의 시스템 설정(`/opt/homebrew/etc/gitconfig`)에 모든 호스트용으로 이렇게 들어 있다.
-    ```ini
-    [credential]
-    	helper = osxkeychain
-    ```
-    git은 helper를 모든 설정 파일에서 모아 차례로 부른다. 빈 값은 "지금까지 모은 목록을 비운다"는 뜻이라, 이 줄이 github.com에서만 그것을 끈다. 끄지 않으면 키체인에 남은 옛 GitHub 비밀번호가 gh 토큰보다 먼저 쓰일 수 있다. 다른 호스트는 계속 키체인을 쓴다.
+  - **`helper =`(빈 값)** — github.com에서만 키체인을 끈다. 아래 순서로 읽으면 된다.
+    - **호스트**: git이 접속하는 서버 주소. 원격 주소에서 `https://` 바로 뒤 부분이다. `https://github.com/…`이면 `github.com`, `https://gitlab.com/…`이면 `gitlab.com`, 회사 자체 git 서버면 그 서버 주소.
+    - **helper**: HTTPS 서버가 인증을 요구하면 git은 사용자에게 묻기 전에 helper(자격 증명 도우미)들에게 차례로 묻는다. helper 목록은 시스템 설정 → 전역 설정(`~/.gitconfig`) → 저장소 설정 순으로 **모아서** 만든다. 설정에는 모든 호스트용(`[credential]`)과 특정 호스트용(`[credential "https://github.com"]`)이 있다.
+    - Homebrew git을 쓰는 맥에서는 이렇게 겹친다.
+      ```ini
+      # 시스템 설정 /opt/homebrew/etc/gitconfig (Homebrew git): 모든 호스트
+      [credential]
+      	helper = osxkeychain
+
+      # 전역 설정 (이 저장소 git/gitconfig): github.com 에만
+      [credential "https://github.com"]
+      	helper =
+      	helper = !/opt/homebrew/bin/gh auth git-credential
+      ```
+    - **github.com에 접속할 때**: 시스템 설정에서 `osxkeychain`이 목록에 들어온다 → github.com 블록의 빈 `helper =`가 목록을 비운다(빈 값 = "지금까지 모은 목록을 지운다") → `gh`가 들어온다. 최종 목록은 **gh 하나**.
+    - **다른 호스트(gitlab.com 등)에 접속할 때**: github.com 블록은 적용되지 않으므로 목록은 **osxkeychain 그대로**. 맥 키체인에 저장된 비밀번호를 쓴다.
+    - **빈 줄이 없으면**: github.com 목록이 `osxkeychain → gh` 순서가 되어 키체인에 남은 옛 GitHub 비밀번호가 먼저 쓰인다(2026-09-28 회사 맥북 키체인에 실제로 남아 있었다). 만료된 값이면 인증이 실패한다.
   - **`helper = !/opt/homebrew/bin/gh auth git-credential`** — gh에게 토큰을 받는다. 절대 경로인 이유: Xcode 같은 GUI 앱이 git을 부를 때는 PATH가 짧아 `gh`만 적으면 못 찾는다. Apple Silicon Homebrew 경로다.
 
 ## SSH
