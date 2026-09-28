@@ -1,0 +1,8 @@
+# ~/.ssh/config → dotfiles ssh/config (심볼릭 링크). 근거는 ssh/README.md
+# 기계마다 다른 값(키 파일 경로, 이 기계만 쓰는 호스트)은 ~/.ssh/config.local 에 둔다.
+# SSH 는 먼저 읽은 값을 쓰므로 Include 를 맨 위에 두어 기계별 설정이 우선하게 한다.
+Include config.local
+
+# 모든 접속은 Secretive(Secure Enclave) 에이전트의 키를 쓴다.
+Host *
+  IdentityAgent ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh

@@ -30,17 +30,9 @@
   - 첫 줄 `helper =`(빈 값): Homebrew git의 시스템 설정이 모든 호스트에 `osxkeychain` helper를 걸어 둔다. 이 줄이 github.com에서만 그것을 끈다. 끄지 않으면 키체인에 남은 옛 GitHub 비밀번호가 gh 토큰보다 먼저 쓰일 수 있다. 다른 호스트는 계속 키체인을 쓴다.
   - `/opt/homebrew/bin/gh` 절대 경로: Xcode 같은 GUI 앱이 git을 부를 때는 PATH가 짧아 `gh`만 적으면 못 찾는다. Apple Silicon Homebrew 경로다.
 
-## SSH (dotfiles 밖, `~/.ssh/config.local`)
+## SSH
 
-git 설정은 아니지만 위 전송 규칙이 동작하는 전제라 여기 적는다.
-
-- **`Host github.com`에 기본 인증 키 고정** (`IdentityFile` + `IdentitiesOnly yes`): Secretive 에이전트는 가진 키를 순서대로 내민다. Notify 배포 키가 먼저 받아들여지면 GitHub가 이 기계를 그 저장소의 배포 키로 인식해 다른 저장소가 모두 거부된다. 기본 키를 Touch ID 인증 키 하나로 고정해 막는다.
-- **저장소별 배포 키** (무인 작업 저장소만): Secretive Notify 키를 그 저장소의 **쓰기 배포 키**로 등록하고, 저장소 로컬 설정에서만 쓴다. 배포 키는 GitHub 전체에서 저장소 하나에만 붙어서, 인증 없이 쓰이는 키의 영향 범위가 그 저장소로 한정된다. 그 저장소는 낮·밤 모두 Touch ID 없이 pull·push 된다.
-  ```
-  git -C <저장소> config --local core.sshCommand \
-    "ssh -o IdentityAgent=$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i <배포 키 .pub>"
-  ```
-- 22번 포트가 막힌 네트워크에서는 `Host github.com`에 `HostName ssh.github.com`, `Port 443`을 더한다.
+SSH 키 고정·저장소별 배포 키·포트 우회는 `ssh/README.md`. 위 전송 규칙은 그 설정이 전제다.
 
 ## gh CLI (dotfiles가 관리하지 않음 — 새 기계에서 실행)
 
