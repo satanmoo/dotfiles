@@ -24,6 +24,7 @@
 | 같은 경우인데 비공개(예: 프로젝트에 `https://github.com/<조직>/<비공개 패키지>.git`로 적힌 Unity 패키지) | HTTPS | gh 토큰 |
 
 - 내 저장소를 SSH 주소로 받는 건 gh 설정 `git_protocol ssh`가 맡는다(아래 gh 절). 원격 주소 자체가 SSH라 주소 치환이 필요 없다.
+- 이미 있는 클론은 원격 주소를 확인한다: `git remote get-url origin`이 `https://github.com/…`이면 `git remote set-url origin git@github.com:<소유자>/<저장소>.git`. HTTPS로 남아 있으면 SSH 키·배포 키 대신 gh 토큰으로 접속한다.
 - 남이 적은 HTTPS 주소는 바꾸지 않는다. 바꾸려면 조직별 치환 목록이 필요하고, 공개 의존성을 받을 때도 키와 Touch ID를 요구하게 돼 무인 빌드가 멈춘다.
 - **`[credential "https://github.com"]`**: 위 표의 세 번째 경우, 즉 HTTPS 주소인데 인증이 필요할 때 git이 비밀번호를 묻는 대신 gh에게 토큰을 받아 쓴다. 평소에는 거의 쓰이지 않는 보험이지만, 없으면 에이전트가 비밀번호 입력에서 멈춘다.
   - 첫 줄 `helper =`(빈 값): Homebrew git의 시스템 설정이 모든 호스트에 `osxkeychain` helper를 걸어 둔다. 이 줄이 github.com에서만 그것을 끈다. 끄지 않으면 키체인에 남은 옛 GitHub 비밀번호가 gh 토큰보다 먼저 쓰일 수 있다. 다른 호스트는 계속 키체인을 쓴다.
