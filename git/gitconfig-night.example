@@ -1,19 +1,26 @@
-# 야간 무인 작업 전용 Git 설정 (Secretive 야간 키)
+# Touch ID 없이 커밋·푸시하는 구성 (Secretive Notify 키)
 #
-# ~/.gitconfig-night 로 복사한 뒤 NIGHT_KEY_ID 를 실제 Secretive 공개키 이름으로 바꾼다.
-# 이 파일은 includeIf 로 자동 적용되지 않는다. 야간 래퍼만 자기 프로세스에 넣는다:
+# 키 구성 (기계마다):
+#   - 기본 인증 키: Secretive, Touch ID. 계정 인증 키. 다른 모든 저장소의 pull·push.
+#   - 서명 키 1개: Secretive, Notify(잠금 해제 중 인증 없음, 사용 알림). 계정 서명 키.
+#       ~/.gitconfig-work·~/.gitconfig-personal-local 의 user.signingkey 로 지정 → 모든 커밋이 Touch ID 없이 서명.
+#   - 저장소별 배포 키: Secretive, Notify. 그 저장소 하나에만 쓰기 배포 키로 등록
+#     (배포 키는 GitHub 전체에서 저장소 하나에만 붙는다). 무인 작업이 필요한 저장소만 만든다.
+#
+# 배포 키 연결은 그 저장소의 로컬 설정(.git/config)에 둔다. 이 저장소(dotfiles)에 넣지 않는다:
+#   git -C <저장소> config --local core.sshCommand \
+#     "ssh -o IdentityAgent=$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i <배포 키 .pub>"
+# 그러면 그 저장소만 낮·밤 모두 Touch ID 없이 pull·push 되고, 다른 저장소는 그대로 Touch ID.
+#
+# 아래는 저장소 로컬 설정을 쓸 수 없는 경우(임시 클론 등)에 프로세스 한정으로 끼워 넣는 선택용 파일이다.
+# ~/.gitconfig-night 로 복사해 자리표시자를 바꾸고:
 #   GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=include.path GIT_CONFIG_VALUE_0=$HOME/.gitconfig-night git ...
-# 명령행 설정이라 includeIf 설정보다 우선한다. 낮 작업은 지금처럼 Touch ID 키를 쓴다.
 #
-# 야간 키: Secretive 에서 Touch ID(인증) 요구 없이 만든 Secure Enclave 키. 복사할 수 없다.
-# 로그인된 동안 같은 사용자의 프로세스가 조용히 쓸 수 있으므로 GitHub 에는
-#   - 푸시: 저장소 하나에만 쓰기 배포 키로 등록 (배포 키는 GitHub 전체에서 저장소 하나에만 붙는다)
-#   - 서명: 계정의 서명 키로 등록
-# 해서 영향 범위를 그 저장소로 좁힌다.
+# 위험: Notify 키는 잠금이 풀린 동안 같은 사용자의 어떤 프로세스든 알림 한 번으로 쓸 수 있다.
+# 푸시 범위를 배포 키로 저장소 하나에 묶는 이유다.
 
 [user]
-    signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/NIGHT_KEY_ID.pub
+    signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/SIGNING_KEY_ID.pub
 
 [core]
-    # 이 키 하나만 쓰도록 고정한다(IdentitiesOnly). 에이전트는 Secretive 소켓.
-    sshCommand = ssh -o IdentityAgent=~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/NIGHT_KEY_ID.pub
+    sshCommand = ssh -o IdentityAgent=~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/DEPLOY_KEY_ID.pub
