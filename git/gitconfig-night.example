@@ -3,7 +3,7 @@
 # 키 구성 (기계마다):
 #   - 기본 인증 키: Secretive, Touch ID. 계정 인증 키. 다른 모든 저장소의 pull·push.
 #   - 서명 키 1개: Secretive, Notify(잠금 해제 중 인증 없음, 사용 알림). 계정 서명 키.
-#       ~/.gitconfig-work·~/.gitconfig-personal-local 의 user.signingkey 로 지정 → 모든 커밋이 Touch ID 없이 서명.
+#       ~/.gitconfig-local 의 user.signingkey 로 지정 → 모든 커밋이 Touch ID 없이 서명.
 #   - 저장소별 배포 키: Secretive, Notify. 그 저장소 하나에만 쓰기 배포 키로 등록
 #     (배포 키는 GitHub 전체에서 저장소 하나에만 붙는다). 무인 작업이 필요한 저장소만 만든다.
 #

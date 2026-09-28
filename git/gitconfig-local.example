@@ -1,0 +1,7 @@
+# ~/.gitconfig-local 로 복사한 뒤 자리표시자를 이 기계의 실제 값으로 바꾼다. 저장소에는 넣지 않는다.
+# 전역 gitconfig 가 [include] 로 읽는다. 신원(name·email)은 전역에 있으므로 여기엔 기계별 값만 둔다.
+#
+# 서명 키: Secretive 에서 Protection Level = Notify 로 만든 키(기계당 1개)의 공개키 경로.
+#   GitHub 계정(satanmoo)에 Signing Key 로 등록하고, ~/.gitallowedsigners 에도 한 줄 추가한다.
+[user]
+    signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/SIGNING_KEY_ID.pub
