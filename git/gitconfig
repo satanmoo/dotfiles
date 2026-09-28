@@ -5,10 +5,6 @@
 	name = satanmoo
 	email = gyo8270@gmail.com
 
-# 기계마다 다른 값(서명 키 경로)은 저장소 밖 로컬 파일에 둔다. 템플릿: git/gitconfig-local.example
-[include]
-	path = ~/.gitconfig-local
-
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore-global
@@ -71,3 +67,8 @@
 [credential "https://github.com"]
 	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
+
+# 기계마다 다른 값(서명 키 경로 등)은 저장소 밖 로컬 파일에 둔다. 템플릿: git/gitconfig-local.example
+# 맨 끝에 둔다: git 은 나중에 읽은 값을 쓰므로 로컬 파일 값이 위 공통 값을 덮는다(예: core.editor).
+[include]
+	path = ~/.gitconfig-local

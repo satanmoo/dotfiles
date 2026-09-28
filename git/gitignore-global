@@ -4,3 +4,7 @@
 **/.codex/
 
 **/.claude/settings.local.json
+
+# 편집기·도구 로컬 설정
+.idea/
+.obsidian/
