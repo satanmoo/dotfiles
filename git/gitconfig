@@ -57,13 +57,19 @@
 [help]
 	autocorrect = prompt
 
-[url "git@github.com:"]
-	insteadOf = https://github.com/
+# 내 계정·조직 저장소만 SSH(Secretive)로 바꾼다. 그 밖의 공개 저장소(Xcode SPM의 Firebase, Unity·Homebrew 의존성 등)는
+# HTTPS 익명으로 받는다 — 전체를 SSH로 바꾸면 모든 다운로드가 키(Touch ID)를 요구해 무인 빌드가 멈춘다.
+[url "git@github.com:satanmoo/"]
+	insteadOf = https://github.com/satanmoo/
+[url "git@github.com:sigmastudio-infra/"]
+	insteadOf = https://github.com/sigmastudio-infra/
+[url "git@github-infra:Sigma-Studio-INC/"]
+	insteadOf = https://github.com/Sigma-Studio-INC/
 
 # 디렉토리별 계정 분리
-[includeIf "gitdir:~/work/dev/"]
-	path = ~/.gitconfig-dev
-
+[includeIf "gitdir:~/work/"]
+	path = ~/.gitconfig-work
+# ~/work/infra/ 만 회사(infra) 계정. ~/work/ 뒤에 두어야 덮어쓴다.
 [includeIf "gitdir:~/work/infra/"]
 	path = ~/.gitconfig-infra
 

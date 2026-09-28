@@ -1,0 +1,17 @@
+# 새 Mac에서 ~/.gitconfig-work로 복사한 뒤 placeholder를 실제 값으로 교체
+# 기존 파일이 있다면 덮어쓰지 말고 계정 설정을 먼저 확인
+# 실제 이름, 이메일, 서명 키 경로는 로컬 파일에서 관리
+# ~/work/ 아래 저장소에 적용되며, 이 예제 자체는 include하지 않음
+[user]
+    name = YOUR_WORK_NAME
+    email = YOUR_WORK_EMAIL
+    signingkey = /absolute/path/to/your/Secretive/PublicKeys/WORK_KEY_ID.pub
+
+[commit]
+    gpgsign = true
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    allowedSignersFile = ~/.gitallowedsigners
