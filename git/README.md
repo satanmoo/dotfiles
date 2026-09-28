@@ -4,14 +4,41 @@
 
 ## 신원
 
-- **전역 신원 하나** (`[user]`): 모든 커밋은 개인 계정 satanmoo(`gyo8270@gmail.com`)로 한다. 폴더별로 신원을 나눌 이유가 없어 전역에 한 번만 적는다. 어느 폴더에서 클론해도 같은 신원으로 커밋된다.
-- **`~/.gitconfig-local`** (`[include]`): 서명 키 경로처럼 기계마다 다른 값만 둔다. 저장소에 넣지 않으므로 다른 기계에 dotfiles를 가져가도 키가 섞이지 않는다.
+```ini
+[user]
+	name = satanmoo
+	email = gyo8270@gmail.com
+
+[include]
+	path = ~/.gitconfig-local
+```
+
+- **`[user]` — 전역 신원 하나**: 모든 커밋은 개인 계정 satanmoo(`gyo8270@gmail.com`)로 한다. 폴더별로 신원을 나눌 이유가 없어 전역에 한 번만 적는다. 어느 폴더에서 클론해도 같은 신원으로 커밋된다.
+- **`[include]` → `~/.gitconfig-local`**: 서명 키 경로처럼 기계마다 다른 값만 둔다. 저장소에 넣지 않으므로 다른 기계에 dotfiles를 가져가도 키가 섞이지 않는다.
 
 ## 서명
 
-- **SSH 서명** (`gpg.format = ssh`, `commit.gpgsign`, `tag.gpgsign`): GPG 키를 따로 관리하지 않고 Secretive(Secure Enclave)의 SSH 키로 서명한다. GitHub 계정에 **Signing Key**로 등록한 키로 서명하면 커밋에 Verified가 붙는다.
-- **서명 키는 기계당 하나, Secretive Protection Level = Notify**: Notify는 잠금이 풀린 동안 인증 없이 쓰이고 사용할 때 알림만 뜬다. 그래서 커밋할 때 Touch ID가 뜨지 않고, 에이전트의 무인 커밋도 서명된다. 서명 키만으로는 푸시할 수 없으므로 인증 키보다 풀어 두는 위험이 작다. 경로는 `~/.gitconfig-local`의 `user.signingkey`.
-- **`~/.gitallowedsigners`** (`gpg.ssh.allowedSignersFile`): 이 기계에서 `git log --show-signature`로 서명을 검증할 때만 쓰는 목록이다. 첫 칸(principal)은 이메일, 나머지는 공개키. GitHub의 Verified 판정과는 무관하다. 현재 서명 키만 둔다(과거 커밋은 로컬에서 검증하지 않는다). 다른 기계의 서명 키를 넣으면 그 기계의 커밋도 여기서 검증된다.
+```ini
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.gitallowedsigners
+```
+
+`~/.gitconfig-local`(기계별):
+
+```ini
+[user]
+	signingkey = <Secretive 서명 키 .pub 경로>
+```
+
+- **`gpg.format = ssh`, `commit.gpgsign`, `tag.gpgsign` — SSH 키로 모든 커밋·태그 서명**: GPG 키를 따로 관리하지 않고 Secretive(Secure Enclave)의 SSH 키로 서명한다. GitHub 계정에 **Signing Key**로 등록한 키로 서명하면 커밋에 Verified가 붙는다.
+- **`user.signingkey` — 기계당 하나, Secretive Protection Level = Notify**: Notify는 잠금이 풀린 동안 인증 없이 쓰이고 사용할 때 알림만 뜬다. 그래서 커밋할 때 Touch ID가 뜨지 않고, 에이전트의 무인 커밋도 서명된다. 서명 키만으로는 푸시할 수 없으므로 인증 키보다 풀어 두는 위험이 작다. 경로는 `~/.gitconfig-local`의 `user.signingkey`.
+- **`gpg.ssh.allowedSignersFile` → `~/.gitallowedsigners`**: 이 기계에서 `git log --show-signature`로 서명을 검증할 때만 쓰는 목록이다. 첫 칸(principal)은 이메일, 나머지는 공개키. GitHub의 Verified 판정과는 무관하다. 현재 서명 키만 둔다(과거 커밋은 로컬에서 검증하지 않는다). 다른 기계의 서명 키를 넣으면 그 기계의 커밋도 여기서 검증된다.
 
 ## GitHub 접속: 원격 주소가 전송 방식을 정한다
 
@@ -26,9 +53,21 @@
 - 내 저장소를 SSH 주소로 받는 건 gh 설정 `git_protocol ssh`가 맡는다(아래 gh 절). 원격 주소 자체가 SSH라 주소 치환이 필요 없다.
 - 이미 있는 클론은 원격 주소를 확인한다: `git remote get-url origin`이 `https://github.com/…`이면 `git remote set-url origin git@github.com:<소유자>/<저장소>.git`. HTTPS로 남아 있으면 SSH 키·배포 키 대신 gh 토큰으로 접속한다.
 - 남이 적은 HTTPS 주소는 바꾸지 않는다. 바꾸려면 조직별 치환 목록이 필요하고, 공개 의존성을 받을 때도 키와 Touch ID를 요구하게 돼 무인 빌드가 멈춘다.
+
+```ini
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+```
+
 - **`[credential "https://github.com"]`**: 위 표의 세 번째 경우, 즉 HTTPS 주소인데 인증이 필요할 때 git이 비밀번호를 묻는 대신 gh에게 토큰을 받아 쓴다. 평소에는 거의 쓰이지 않는 보험이지만, 없으면 에이전트가 비밀번호 입력에서 멈춘다.
-  - 첫 줄 `helper =`(빈 값): Homebrew git의 시스템 설정이 모든 호스트에 `osxkeychain` helper를 걸어 둔다. 이 줄이 github.com에서만 그것을 끈다. 끄지 않으면 키체인에 남은 옛 GitHub 비밀번호가 gh 토큰보다 먼저 쓰일 수 있다. 다른 호스트는 계속 키체인을 쓴다.
-  - `/opt/homebrew/bin/gh` 절대 경로: Xcode 같은 GUI 앱이 git을 부를 때는 PATH가 짧아 `gh`만 적으면 못 찾는다. Apple Silicon Homebrew 경로다.
+  - **`helper =`(빈 값)**: Homebrew git의 시스템 설정(`/opt/homebrew/etc/gitconfig`)에 모든 호스트용으로 이렇게 들어 있다.
+    ```ini
+    [credential]
+    	helper = osxkeychain
+    ```
+    git은 helper를 모든 설정 파일에서 모아 차례로 부른다. 빈 값은 "지금까지 모은 목록을 비운다"는 뜻이라, 이 줄이 github.com에서만 그것을 끈다. 끄지 않으면 키체인에 남은 옛 GitHub 비밀번호가 gh 토큰보다 먼저 쓰일 수 있다. 다른 호스트는 계속 키체인을 쓴다.
+  - **`helper = !/opt/homebrew/bin/gh auth git-credential`** — gh에게 토큰을 받는다. 절대 경로인 이유: Xcode 같은 GUI 앱이 git을 부를 때는 PATH가 짧아 `gh`만 적으면 못 찾는다. Apple Silicon Homebrew 경로다.
 
 ## SSH
 
@@ -48,13 +87,57 @@ gh config set -h github.com git_protocol ssh
 
 ## 기본 동작
 
-- `core.quotepath = false`: 한글 파일 이름을 이스케이프 없이 표시.
-- `core.precomposeunicode = true`: 맥의 한글 파일 이름(NFD)을 NFC로 다뤄 다른 OS와 이름이 어긋나지 않게.
+```ini
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore-global
+	autocrlf = false
+	quotepath = false
+	precomposeunicode = true
+[init]
+	defaultBranch = main
+[log]
+	date = iso8601
+[color]
+	ui = auto
+[fetch]
+	prune = true
+	prunetags = true
+[push]
+	default = simple
+[pull]
+	rebase = true
+[rebase]
+	autostash = true
+	autosquash = true
+[merge]
+	conflictstyle = zdiff3
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+[help]
+	autocorrect = prompt
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+```
+
+- `core.editor = vim`: 커밋 메시지 편집기.
+- `core.excludesfile = ~/.gitignore-global`: 모든 저장소 공통 무시 목록. 원본은 `git/gitignore-global`.
 - `core.autocrlf = false`: 줄바꿈 자동 변환 안 함.
-- `core.excludesfile`: 모든 저장소 공통 무시 목록(`git/gitignore-global`).
-- `fetch.prune`, `fetch.prunetags`: 원격에서 지운 브랜치·태그를 로컬 추적에서도 지움.
-- `pull.rebase`, `rebase.autostash`, `rebase.autosquash`: pull은 merge 커밋 대신 rebase, 그 전에 미커밋 변경을 잠시 치웠다 되돌림, `fixup!` 커밋 자동 정렬.
-- `merge.conflictstyle = zdiff3`: 충돌 표시에 공통 조상 버전까지 보여 판단이 쉬움.
-- `rerere.enabled`: 한 번 푼 충돌 해결을 기억해 같은 충돌에 재적용.
-- `push.default = simple`, `init.defaultBranch = main`, `log.date = iso8601`, `help.autocorrect = prompt`.
-- `[filter "lfs"]`: Git LFS 표준 설정(`git lfs install`이 넣는 값).
+- `core.quotepath = false`: 한글 파일 이름을 `\352\260…`처럼 이스케이프하지 않고 그대로 표시.
+- `core.precomposeunicode = true`: 맥은 한글 파일 이름을 자모 분리형(NFD)으로 저장한다. 이를 합친 형(NFC)으로 다뤄 다른 OS와 파일 이름이 어긋나지 않게 한다.
+- `init.defaultBranch = main`, `log.date = iso8601`, `color.ui = auto`: 새 저장소 기본 브랜치, 로그 날짜 형식, 터미널 색상.
+- `fetch.prune`, `fetch.prunetags`: 원격에서 지운 브랜치·태그를 로컬 추적 목록에서도 지운다.
+- `push.default = simple`: 현재 브랜치를 같은 이름의 원격 브랜치로만 푸시.
+- `pull.rebase`: pull할 때 merge 커밋 대신 내 커밋을 원격 위로 다시 쌓는다.
+- `rebase.autostash`: rebase 전에 미커밋 변경을 잠시 치웠다가 되돌린다.
+- `rebase.autosquash`: `fixup!` 커밋을 대화형 rebase 때 자동 정렬.
+- `merge.conflictstyle = zdiff3`: 충돌 표시에 공통 조상 버전까지 보여 판단이 쉽다.
+- `commit.verbose`: 커밋 메시지 편집 화면에 변경 내용(diff)을 함께 보여 준다.
+- `rerere.enabled`: 한 번 푼 충돌 해결을 기억했다가 같은 충돌에 자동 적용.
+- `help.autocorrect = prompt`: 명령 오타 시 맞는 명령을 제안하고 실행할지 묻는다.
+- `[filter "lfs"]`: Git LFS 표준 설정(`git lfs install`이 넣는 값). 큰 바이너리 파일을 LFS로 다룬다.
