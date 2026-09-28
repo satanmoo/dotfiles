@@ -1,26 +1,7 @@
-# Touch ID 없이 커밋·푸시하는 구성 (Secretive Notify 키)
-#
-# 키 구성 (기계마다):
-#   - 기본 인증 키: Secretive, Touch ID. 계정 인증 키. 다른 모든 저장소의 pull·push.
-#   - 서명 키 1개: Secretive, Notify(잠금 해제 중 인증 없음, 사용 알림). 계정 서명 키.
-#       ~/.gitconfig-local 의 user.signingkey 로 지정 → 모든 커밋이 Touch ID 없이 서명.
-#   - 저장소별 배포 키: Secretive, Notify. 그 저장소 하나에만 쓰기 배포 키로 등록
-#     (배포 키는 GitHub 전체에서 저장소 하나에만 붙는다). 무인 작업이 필요한 저장소만 만든다.
-#
-# 배포 키 연결은 그 저장소의 로컬 설정(.git/config)에 둔다. 이 저장소(dotfiles)에 넣지 않는다:
-#   git -C <저장소> config --local core.sshCommand \
-#     "ssh -o IdentityAgent=$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i <배포 키 .pub>"
-# 그러면 그 저장소만 낮·밤 모두 Touch ID 없이 pull·push 되고, 다른 저장소는 그대로 Touch ID.
-#
-# 아래는 저장소 로컬 설정을 쓸 수 없는 경우(임시 클론 등)에 프로세스 한정으로 끼워 넣는 선택용 파일이다.
+# 선택용: 저장소 로컬 설정을 쓸 수 없을 때(임시 클론 등) 프로세스 한정으로 배포 키를 끼워 넣는 파일.
+# 평소에는 저장소 로컬 core.sshCommand 를 쓴다(git/README.md 「SSH」).
 # ~/.gitconfig-night 로 복사해 자리표시자를 바꾸고:
 #   GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=include.path GIT_CONFIG_VALUE_0=$HOME/.gitconfig-night git ...
-#
-# 위험: Notify 키는 잠금이 풀린 동안 같은 사용자의 어떤 프로세스든 알림 한 번으로 쓸 수 있다.
-# 푸시 범위를 배포 키로 저장소 하나에 묶는 이유다.
-
-[user]
-    signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/SIGNING_KEY_ID.pub
 
 [core]
     sshCommand = ssh -o IdentityAgent=~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/DEPLOY_KEY_ID.pub

@@ -1,5 +1,6 @@
-# 전역 신원 하나: 모든 커밋은 개인 계정 satanmoo 로 한다.
-# (회사 계정 sigmastudio-infra 는 저장소 소유만, 웹에서 관리. git 신원·키 없음)
+# 설정별 근거는 git/README.md
+
+# 전역 신원 하나: 모든 커밋은 satanmoo 로 한다.
 [user]
 	name = satanmoo
 	email = gyo8270@gmail.com
@@ -54,32 +55,19 @@
 [gpg "ssh"]
 	allowedSignersFile = ~/.gitallowedsigners
 
-[credential]
-	helper = git-credential-cache
-
 [rerere]
 	enabled = true
 
 [help]
 	autocorrect = prompt
 
-# 내 계정·조직 저장소만 SSH(Secretive)로 바꾼다. 그 밖의 공개 저장소(Xcode SPM의 Firebase, Unity·Homebrew 의존성 등)는
-# HTTPS 익명으로 받는다 — 전체를 SSH로 바꾸면 모든 다운로드가 키(Touch ID)를 요구해 무인 빌드가 멈춘다.
-[url "git@github.com:satanmoo/"]
-	insteadOf = https://github.com/satanmoo/
-[url "git@github.com:sigmastudio-infra/"]
-	insteadOf = https://github.com/sigmastudio-infra/
-[url "git@github.com:Sigma-Studio-INC/"]
-	insteadOf = https://github.com/Sigma-Studio-INC/
-
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+
+# HTTPS 주소인데 인증이 필요할 때만 쓰인다(비공개 HTTPS 의존성). 빈 helper = 로 시스템 키체인 helper 를 끄고 gh 토큰만 쓴다.
 [credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
