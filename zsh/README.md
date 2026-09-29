@@ -18,7 +18,7 @@ ln -s ~/dotfiles/zsh/p10k.zsh ~/.p10k.zsh
 
 터미널 앱과 WezTerm은 새 창을 로그인 + 대화형 셸로 연다. 읽는 순서는 `~/.zshenv` → `/etc/zprofile` → `~/.zprofile` → `~/.zshrc`.
 
-- **`zshenv`**: 모든 zsh에서. 터미널뿐 아니라 `ssh host '명령'`, 에이전트가 띄우는 zsh, zsh 스크립트도 읽는다. 어디서든 필요한 환경 변수만. PATH는 두지 않는다 — 로그인 셸이면 뒤이어 `/etc/zprofile`의 `path_helper`가 순서를 다시 짠다.
+- **`zshenv`**: 모든 zsh에서. 터미널뿐 아니라 `ssh host '명령'`, 에이전트·MCP 서버를 띄우는 zsh, zsh 스크립트도 읽는다. 어디서든 필요한 환경 변수만. PATH는 원칙적으로 두지 않는다 — 로그인 셸이면 뒤이어 `/etc/zprofile`의 `path_helper`가 순서를 다시 짠다. 예외는 비로그인 셸에서도 찾아야 하는 도구의 PATH(아래 기계별 파일).
 - **`zprofile`**: 로그인 셸에서 한 번. PATH·환경 변수처럼 한 번 정하면 되는 것. `/etc/zprofile`의 `path_helper`가 PATH를 macOS 기본 순서로 다시 짠 **뒤에** 읽히므로, 여기서 앞에 넣은 경로가 유지된다.
 - **`zshrc`**: 대화형 셸에서. 프롬프트·플러그인·자동완성·히스토리·별칭. `[[ -o interactive ]] || return` 아래는 대화형이 아니면 건너뛴다.
 - `ssh host '명령'`은 `zshenv`만 읽는다. launchd 작업은 zsh 파일을 하나도 읽지 않는다(bash 스크립트면 더더욱). 무인 스크립트는 PATH·`SSH_AUTH_SOCK`을 스크립트 안에서 정하거나 절대 경로를 쓴다.
@@ -41,8 +41,7 @@ ln -s ~/dotfiles/zsh/p10k.zsh ~/.p10k.zsh
 
 ## 기계별 파일
 
-- `~/.zshenv.local`: 이 기계에만 있는, 모든 zsh에서 쓰는 환경 변수(PATH 제외).
-- 설치기가 `~/.zshenv`에 덧붙인 줄(예: uv의 `~/.local/bin` PATH)은 링크를 통해 `zsh/zshenv`에 들어간다. `git status`에 보이면 PATH는 `~/.zprofile.local`, 그 밖의 변수는 `~/.zshenv.local`로 옮긴다.
+- `~/.zshenv.local`: 이 기계에만 있는, 모든 zsh에서 쓰는 값. 비로그인 셸에서 뜨는 프로세스(MCP 서버, `ssh host '명령'`)가 찾아야 하는 도구의 PATH도 여기 둔다.
 - `~/.zprofile.local`: 이 기계에만 있는 PATH. 예: JetBrains Toolbox의 셸 스크립트 폴더(`idea`, `studio`).
 - `~/.zshrc.local`: 이 기계에서만 쓰는 도구 초기화·별칭.
-- JetBrains Toolbox는 "셸 스크립트 생성"이 켜져 있으면 `~/.zprofile` 끝에 PATH 줄을 직접 덧붙인다. `~/.zprofile`은 링크라 그 줄이 `zsh/zprofile`에 들어가므로, `git status`에 보이면 그 줄을 `~/.zprofile.local`로 옮긴다.
+- 설치기가 덧붙인 줄: `~/.zshenv`·`~/.zprofile`·`~/.zshrc`는 링크라 그 줄이 dotfiles에 들어간다. 설치기는 줄을 넣은 파일로 의도를 드러내므로, `git status`에 보이면 **같은 단계의 `.local`**로 옮긴다(`~/.zshenv` → `~/.zshenv.local`, `~/.zprofile` → `~/.zprofile.local`, `~/.zshrc` → `~/.zshrc.local`). 예: JetBrains Toolbox("셸 스크립트 생성")는 `~/.zprofile`, Unity CLI는 `~/.zshrc`(`. ~/.unity/env`).
