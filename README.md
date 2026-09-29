@@ -32,7 +32,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
    ln -s ~/dotfiles/aerospace/aerospace.toml ~/.aerospace.toml
    mkdir -p ~/.config/wezterm && ln -s ~/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
    ```
-3. 기계 값: `git/gitconfig-local.example` → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zshenv.local`·`~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
+3. 기계 값: `git/gitconfig-local.example`(무인 작업기는 `git/gitconfig-auto.example`) → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zshenv.local`·`~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
 4. AltTab: 설정 창 General → Import settings… → `alt-tab/alt-tab-config.plist`.
 5. AeroSpace를 한 번 실행한다. `start-at-login = true`라 이후 로그인 때 스스로 뜬다.
 

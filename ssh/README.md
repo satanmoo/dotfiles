@@ -50,15 +50,16 @@ Host <별칭>
 
 ## 저장소별 배포 키 (git 저장소 로컬 설정)
 
-무인 작업이 필요한 저장소만 쓴다.
+무인 작업이 필요한 저장소만 쓴다. 무인 작업기에서는 파일 키로 만든다(아래, `git/gitconfig-auto.example`).
 
 ```
 git -C <저장소> config --local core.sshCommand \
-  "ssh -o IdentityAgent=$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh -o IdentitiesOnly=yes -i <배포 키 .pub>"
+  "ssh -o IdentityAgent=none -o IdentitiesOnly=yes -i ~/.ssh/<저장소>-deploy"
 ```
 
 - **배포 키**: GitHub에서 계정이 아니라 **저장소 하나**에 등록하는 SSH 키. 같은 키는 GitHub 전체에서 저장소 하나에만 붙는다. "Allow write access"를 켜야 푸시도 된다.
-- Secretive **Notify** 키로 만든다. Touch ID 없이 쓰이지만, 배포 키라 새더라도 영향이 그 저장소 하나로 한정된다.
+- `~/.ssh`의 **암호 없는 파일 키**로 만든다(`ssh-keygen -t ed25519 -N "" -f ~/.ssh/<저장소>-deploy`). Secretive 키는 에이전트(grok 등)가 띄운 ssh가 닿을 때마다 macOS가 다른 앱 데이터 접근 창을 띄우고, 허용해도 유지되지 않아 무인 pull·push가 멈춘다(2026-09-29). 파일 키라 복사될 수 있지만 배포 키라 영향이 그 저장소 하나로 한정되고, 새면 GitHub에서 그 키만 지운다.
+- **`IdentityAgent=none`**: 에이전트를 아예 묻지 않는다. Secretive 소켓에 닿지 않게 하려는 것이다.
 - **`core.sshCommand`**: 이 저장소에서 git이 SSH를 부를 때 쓸 명령. `-i <배포 키>`로 지정한 키를 **가장 먼저** 보여 준다(명령에 준 `-i`가 설정 파일의 `IdentityFile`보다 앞선다). GitHub가 배포 키를 받아들이므로 그 뒤의 인증 키는 쓰이지 않는다. 그래서 이 저장소만 Touch ID 없이 pull·push 되고, 다른 저장소는 계속 Touch ID 인증 키를 쓴다.
 
 ## 22번 포트가 막힌 네트워크
