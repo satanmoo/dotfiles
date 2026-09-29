@@ -6,6 +6,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
 | --- | --- | --- |
 | `git/` | `~/.gitconfig`, `~/.gitignore-global` | 심볼릭 링크 + `~/.gitconfig-local` |
 | `ssh/` | `~/.ssh/config` | 심볼릭 링크 + `~/.ssh/config.local` |
+| `zsh/` | `~/.zprofile`, `~/.zshrc`, `~/.p10k.zsh` | 심볼릭 링크 + `~/.zprofile.local`, `~/.zshrc.local` |
 | `aerospace/` | `~/.aerospace.toml` | 심볼릭 링크 |
 | `wezterm/` | `~/.config/wezterm/wezterm.lua` | 심볼릭 링크 |
 | `alt-tab/` | AltTab 설정 | 설정 창 Import (링크 불가) |
@@ -24,10 +25,13 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
    ln -s ~/dotfiles/git/gitconfig ~/.gitconfig
    ln -s ~/dotfiles/git/gitignore-global ~/.gitignore-global
    ln -s ~/dotfiles/ssh/config ~/.ssh/config
+   ln -s ~/dotfiles/zsh/zprofile ~/.zprofile
+   ln -s ~/dotfiles/zsh/zshrc ~/.zshrc
+   ln -s ~/dotfiles/zsh/p10k.zsh ~/.p10k.zsh
    ln -s ~/dotfiles/aerospace/aerospace.toml ~/.aerospace.toml
    mkdir -p ~/.config/wezterm && ln -s ~/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
    ```
-3. 기계 값: `git/gitconfig-local.example` → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`). Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
+3. 기계 값: `git/gitconfig-local.example` → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
 4. AltTab: 설정 창 General → Import settings… → `alt-tab/alt-tab-config.plist`.
 5. AeroSpace를 한 번 실행한다. `start-at-login = true`라 이후 로그인 때 스스로 뜬다.
 

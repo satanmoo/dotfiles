@@ -8,6 +8,10 @@ brew "git"
 brew "git-lfs" # gitconfig의 [filter "lfs"]가 required = true
 brew "gh"      # credential helper (/opt/homebrew/bin/gh)
 
+# zsh/
+brew "zinit"
+brew "neovim" # EDITOR=nvim
+
 # ssh/, git 서명
 cask "secretive"
 

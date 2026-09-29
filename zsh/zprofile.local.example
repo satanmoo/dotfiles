@@ -1,0 +1,5 @@
+# ~/.zprofile.local — 이 기계에만 필요한 로그인 셸 값 (저장소에 넣지 않는다)
+# zsh/zprofile 끝에서 읽는다.
+
+# 예: JetBrains Toolbox의 셸 스크립트(idea, studio 등) 폴더
+# export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"

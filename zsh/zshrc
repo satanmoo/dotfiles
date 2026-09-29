@@ -1,0 +1,52 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# If not running interactively, don't do anything
+[[ -o interactive ]] || return
+
+# zinit
+source "$(brew --prefix zinit)/zinit.zsh"
+
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
+
+zinit light zdharma/fast-syntax-highlighting
+zinit light zsh-users/zsh-completions
+
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+zinit light zsh-users/zsh-autosuggestions
+
+zinit light zsh-users/zsh-history-substring-search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+autoload -Uz compinit
+compinit
+zinit cdreplay
+
+# powerlevel10k
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# History
+setopt EXTENDED_HISTORY HIST_IGNORE_ALL_DUPS SHARE_HISTORY
+HISTSIZE=9000000
+SAVEHIST="${HISTSIZE}"
+HISTFILE=~/.zsh_history
+
+# AUTO_CD
+setopt AUTO_CD
+
+# General
+alias mv='mv -i'
+alias cp='cp -i'
+export LANG=en_US.UTF-8
+export EDITOR=nvim
+
+# Load local config
+if [[ -f ~/.zshrc.local ]]; then
+  source ~/.zshrc.local
+fi
