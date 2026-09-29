@@ -1,0 +1,10 @@
+# 모든 zsh가 읽는다(터미널, `ssh host '명령'`, zsh 스크립트). 어디서든 필요한 환경 변수만 둔다.
+# PATH는 여기 두지 않는다: 로그인 셸에서 /etc/zprofile의 path_helper가 순서를 다시 짠다 → zprofile.
+
+# Secretive 에이전트 (git SSH 서명)
+export SSH_AUTH_SOCK=$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+
+# Load local config
+if [[ -f ~/.zshenv.local ]]; then
+  source ~/.zshenv.local
+fi

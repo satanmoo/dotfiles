@@ -41,8 +41,8 @@
 
 - **`gpg.format = ssh`, `commit.gpgsign`, `tag.gpgsign` — SSH 키로 모든 커밋·태그 서명**: GPG 키를 따로 관리하지 않고 Secretive(Secure Enclave)의 SSH 키로 서명한다. GitHub 계정에 **Signing Key**로 등록한 키로 서명하면 커밋에 Verified가 붙는다.
 - **`user.signingkey` — 기계당 하나, Secretive Protection Level = Notify**: Notify는 잠금이 풀린 동안 인증 없이 쓰이고 사용할 때 알림만 뜬다. 그래서 커밋할 때 Touch ID가 뜨지 않고, 에이전트의 무인 커밋도 서명된다. 서명 키만으로는 푸시할 수 없으므로 인증 키보다 풀어 두는 위험이 작다. 경로는 `~/.gitconfig-local`의 `user.signingkey`.
-- **서명은 에이전트가 한다**: `user.signingkey`는 공개키 경로일 뿐이고, 개인키는 Secure Enclave 안에 있다. git은 `ssh-keygen -Y sign`에 서명을 맡기고, `ssh-keygen`은 환경 변수 `SSH_AUTH_SOCK`이 가리키는 에이전트에 그 공개키로 서명을 요청한다(`~/.ssh/config`의 `IdentityAgent`는 ssh 접속에만 쓰인다). `SSH_AUTH_SOCK`은 `zsh/zprofile`이 Secretive 소켓으로 정한다(`../zsh/README.md`).
-  - SecretAgent가 꺼져 있거나 셸이 `zsh/zprofile`을 읽지 않은 환경이면 커밋이 `No private key found for public key "…pub"`로 실패한다. Secretive 앱을 열면 SecretAgent가 다시 뜬다.
+- **서명은 에이전트가 한다**: `user.signingkey`는 공개키 경로일 뿐이고, 개인키는 Secure Enclave 안에 있다. git은 `ssh-keygen -Y sign`에 서명을 맡기고, `ssh-keygen`은 환경 변수 `SSH_AUTH_SOCK`이 가리키는 에이전트에 그 공개키로 서명을 요청한다(`~/.ssh/config`의 `IdentityAgent`는 ssh 접속에만 쓰인다). `SSH_AUTH_SOCK`은 `zsh/zshenv`가 Secretive 소켓으로 정한다(모든 zsh — 터미널, `ssh host '명령'`, 에이전트의 셸)(`../zsh/README.md`).
+  - SecretAgent가 꺼져 있거나 `SSH_AUTH_SOCK`이 없는 환경(zsh가 아닌 셸, launchd 작업 — 스크립트 안에서 정한다)이면 커밋이 `No private key found for public key "…pub"`로 실패한다. Secretive 앱을 열면 SecretAgent가 다시 뜬다.
 - **`gpg.ssh.allowedSignersFile` → `~/.gitallowedsigners`**: 이 기계에서 `git log --show-signature`로 서명을 검증할 때만 쓰는 목록이다. 첫 칸(principal)은 이메일, 나머지는 공개키. GitHub의 Verified 판정과는 무관하다. 현재 서명 키만 둔다(과거 커밋은 로컬에서 검증하지 않는다). 다른 기계의 서명 키를 넣으면 그 기계의 커밋도 여기서 검증된다.
 
 ## GitHub 접속: 원격 주소가 전송 방식을 정한다

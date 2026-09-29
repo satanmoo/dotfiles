@@ -1,0 +1,5 @@
+# ~/.zshenv.local — 이 기계에만 필요한, 모든 zsh에서 쓰는 환경 변수 (저장소에 넣지 않는다)
+# zsh/zshenv 끝에서 읽는다. PATH는 여기 두지 않는다 → ~/.zprofile.local.
+
+# 예: 이 기계에만 있는 도구의 설정 변수
+# export SOME_TOOL_HOME="$HOME/..."
