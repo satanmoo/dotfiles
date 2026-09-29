@@ -15,9 +15,3 @@ ln -s ~/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 - **`color_scheme = 'iTerm2 Light Background'`**: 밝은 테마. 기본은 WezTerm 자체의 어두운 색.
 - **`window_decorations = "RESIZE"`**: 제목 표시줄을 없애고 크기 조절만 남긴다(기본 `"TITLE | RESIZE"`). AeroSpace가 창 배치를 맡으므로 제목 표시줄이 필요 없다.
 - **`window_padding` 사방 8px**: 기본은 좌우 1칸·위아래 반 칸(글자 크기 기준).
-
-## 키 바인딩을 더하지 않는 이유
-
-- `⌥` 조합은 AeroSpace, `⌘⇥`는 AltTab이 쓴다(`../aerospace/README.md`, `../alt-tab/README.md`).
-- `Ctrl+Space`는 macOS "이전 입력 소스 선택"(한/영 전환)이 먼저 가져가므로 리더 키로 쓸 수 없다(2026-09-29 개인 맥북에서 확인 후 리더 키·패널 단축키를 뺐다).
-- 패널 분할·이동이 필요하면 기본 키를 쓴다: 분할 `Ctrl+Shift+Alt+"`(위아래)·`%`(좌우), 이동 `Ctrl+Shift+화살표`.
