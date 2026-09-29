@@ -6,6 +6,6 @@
 [user]
     signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/SIGNING_KEY_ID.pub
 
-# 선택: 이 기계만 다른 편집기를 쓸 때(전역 기본 vim).
+# 선택: 이 기계만 다른 편집기를 쓸 때(전역 기본 nvim).
 # [core]
-#     editor = nvim
+#     editor = vim

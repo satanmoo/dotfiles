@@ -17,7 +17,7 @@
 ```
 
 - **`[user]` — 전역 신원 하나**: 모든 커밋은 개인 계정 satanmoo(`gyo8270@gmail.com`)로 한다. 폴더별로 신원을 나눌 이유가 없어 전역에 한 번만 적는다. 어느 폴더에서 클론해도 같은 신원으로 커밋된다.
-- **`[include]` → `~/.gitconfig-local`**: 서명 키 경로처럼 기계마다 다른 값만 둔다. 저장소에 넣지 않으므로 다른 기계에 dotfiles를 가져가도 키가 섞이지 않는다. **파일 맨 끝에 둔다**: git은 같은 설정을 여러 번 만나면 나중에 읽은 값을 쓰므로, 로컬 파일에 적은 값이 위의 공통 값을 덮는다(예: 이 기계만 `core.editor = nvim`). 앞에 두면 로컬 값이 공통 값에 덮여 무시된다(2026-09-28 개인 맥북에서 확인).
+- **`[include]` → `~/.gitconfig-local`**: 서명 키 경로처럼 기계마다 다른 값만 둔다. 저장소에 넣지 않으므로 다른 기계에 dotfiles를 가져가도 키가 섞이지 않는다. **파일 맨 끝에 둔다**: git은 같은 설정을 여러 번 만나면 나중에 읽은 값을 쓰므로, 로컬 파일에 적은 값이 위의 공통 값을 덮는다(예: 이 기계만 `core.editor = vim`). 앞에 두면 로컬 값이 공통 값에 덮여 무시된다(2026-09-28 개인 맥북에서 확인).
 
 ## 서명
 
@@ -103,7 +103,7 @@ gh config set -h github.com git_protocol ssh
 
 ```ini
 [core]
-	editor = vim
+	editor = nvim
 	excludesfile = ~/.gitignore-global
 	autocrlf = false
 	quotepath = false
@@ -139,7 +139,7 @@ gh config set -h github.com git_protocol ssh
 	smudge = git-lfs smudge -- %f
 ```
 
-- `core.editor = vim`: 커밋 메시지 편집기.
+- `core.editor = nvim`: 커밋 메시지 편집기. 셸의 `EDITOR`(`zsh/zshrc`)와 같게 둔다.
 - `core.excludesfile = ~/.gitignore-global`: 모든 저장소 공통 무시 목록. 원본은 `git/gitignore-global`.
 - `core.autocrlf = false`: 줄바꿈 자동 변환 안 함.
 - `core.quotepath = false`: 한글 파일 이름을 `\352\260…`처럼 이스케이프하지 않고 그대로 표시.
