@@ -19,7 +19,6 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
    git clone git@github.com:satanmoo/dotfiles.git ~/dotfiles   # SSH 전이면 HTTPS로 받고 나중에 바꾼다
    brew bundle --file ~/dotfiles/Brewfile
    ```
-   `git lfs install`은 하지 않는다. 그 명령이 넣는 `[filter "lfs"]`는 `git/gitconfig`에 이미 있다.
 2. 링크. 이미 파일이 있으면 내용을 비교해 필요한 값을 옮긴 뒤 지운다(덮어쓰지 않는다).
    ```sh
    ln -s ~/dotfiles/git/gitconfig ~/.gitconfig
