@@ -52,13 +52,14 @@
 
 | 경우 | 전송 | 인증 |
 | --- | --- | --- |
-| 내가 클론하는 저장소(공개·비공개, 내 것·남의 것 모두) | SSH (`git@github.com:…`) | Secretive 인증 키 |
+| 내가 클론하는 저장소(공개·비공개, 내 것·남의 것 모두) — **받기**(fetch·pull·clone) | HTTPS (주소 치환) | gh 토큰, Touch ID 없음 |
+| 같은 저장소 — **보내기**(push) | SSH | Secretive 인증 키, Touch ID |
+| 무인 작업기의 저장소(사람 없이 받고 보냄) | SSH (`ssh://` 원격, 치환 안 탐) | 저장소별 파일 배포 키 |
 | 도구가 프로젝트 파일에 적힌 주소로 받는 의존성 — 공개(예: Xcode SPM의 Firebase, Unity·CocoaPods·Homebrew) | 적힌 대로, 대개 HTTPS | 없음(익명) |
 | 같은 경우인데 비공개(예: 프로젝트에 `https://github.com/<조직>/<비공개 패키지>.git`로 적힌 Unity 패키지) | HTTPS | gh 토큰 |
 
-- 내 저장소를 SSH 주소로 받는 건 gh 설정 `git_protocol ssh`가 맡는다(아래 gh 절). 원격 주소 자체가 SSH라 주소 치환이 필요 없다.
-- 이미 있는 클론은 원격 주소를 확인한다: `git remote get-url origin`이 `https://github.com/…`이면 `git remote set-url origin git@github.com:<소유자>/<저장소>.git`. HTTPS로 남아 있으면 SSH 키·배포 키 대신 gh 토큰으로 접속한다.
-- **지휘기(Claude 데스크톱 앱을 켜 두는 기계)는 받기와 보내기를 나눈다**: 앱이 열린 세션들의 저장소를 창 포커스·diff 갱신 때마다 백그라운드로 `git fetch`하고, 끄는 설정이 없다(anthropics/claude-code#84698, #96661). Secretive Touch ID 키로 받으면 자리에 없을 때 요청이 쌓여 뒤의 pull·push까지 막혔다(2026-10-01). 그래서 `~/.gitconfig-local`에 둔다(템플릿 `gitconfig-local.example`):
+- 원격 주소는 gh 설정 `git_protocol ssh`대로 `git@github.com:…`로 클론된다(아래 gh 절). `https://…`로 클론된 저장소도 아래 치환으로 같은 결과(받기 HTTPS, 보내기 SSH)가 되니 고칠 필요가 없다.
+- **원칙: 받기는 사람 확인 없이, 보내기만 사람 확인(Touch ID)** — `git/gitconfig`(모든 맥):
   ```ini
   [url "https://github.com/"]
   	insteadOf = git@github.com:
@@ -66,10 +67,14 @@
   	pushInsteadOf = git@github.com:
   	pushInsteadOf = https://github.com/
   ```
-  - `insteadOf`: SSH 주소를 HTTPS로 바꿔 받는다 → 인증은 아래 gh 토큰, Touch ID 없음. 원격 주소 자체는 SSH 그대로다(`git remote -v`가 fetch는 https, push는 git@로 보인다).
-  - `pushInsteadOf = git@github.com:`: git은 push 주소에 `pushInsteadOf`가 맞지 않으면 `insteadOf`를 적용한다. 그러면 SSH 원격의 push도 HTTPS가 되므로, SSH 주소를 SSH로 고정하는 줄을 둔다. `= https://github.com/` 줄은 HTTPS로 클론한 저장소의 push도 SSH로 보낸다.
-  - 결과: 받기는 Touch ID 없이, 원격을 바꾸는 push만 Touch ID.
-  - 무인 작업기에는 두지 않는다. 받기가 저장소 배포 키 대신 gh 토큰으로 바뀐다.
+  - 왜: 받기는 원격을 바꾸지 않는다. 그런데 도구들이 사람 모르게 받는다 — Claude 데스크톱 앱은 열린 세션 저장소를 창 포커스·diff 갱신 때마다 백그라운드로 `git fetch`하고 끄는 설정이 없다(anthropics/claude-code#84698, #96661). 받기에 Touch ID 키를 쓰면 자리에 없을 때 서명 요청이 쌓여 뒤의 pull·push까지 막혔다(2026-10-01). 원격을 바꾸는 push에만 Touch ID를 남긴다.
+  - `insteadOf`: `git@github.com:` 주소를 HTTPS로 바꿔 받는다 → 인증은 아래 gh 토큰(키체인). 원격 주소 자체는 그대로다(`git remote -v`가 fetch는 `https://`, push는 `git@`로 보인다).
+  - `pushInsteadOf = git@github.com:`: git은 push 주소에 `pushInsteadOf`가 맞지 않으면 `insteadOf`를 적용한다. 그러면 SSH 원격의 push도 HTTPS가 되므로 SSH 주소를 SSH로 고정한다. `= https://github.com/` 줄은 HTTPS로 클론한 저장소의 push를 SSH로 보낸다.
+  - gh 토큰은 로그인 키체인에 있다. 로그인 키체인이 잠겨 보이는 곳(다른 기계에서 `ssh <맥> '…'`로 들어온 셸)에서는 받기가 인증에 실패한다 — 원격 맥의 대화형 저장소는 그 맥에서 직접 받거나, 아래 예외 형식으로 둔다.
+- **예외: 무인 작업기의 저장소는 원격을 `ssh://git@github.com/<소유자>/<저장소>.git` 형식으로 둔다.** 치환은 `git@github.com:`·`https://github.com/`로 시작하는 주소만 바꾸므로 `ssh://` 주소는 받기·보내기 모두 SSH 그대로다. 그 저장소의 `core.sshCommand`(파일 배포 키, `gitconfig-auto.example`)로 사람 없이 받고 보낸다. 받기가 gh 토큰으로 바뀌면 배포 키로 좁혀 둔 권한이 계정 전체 토큰으로 넓어지고, ssh 셸에서는 키체인이 잠겨 실패한다.
+  ```
+  git -C <저장소> remote set-url origin ssh://git@github.com/<소유자>/<저장소>.git
+  ```
 - 남이 적은 HTTPS 주소는 바꾸지 않는다. 바꾸려면 조직별 치환 목록이 필요하고, 공개 의존성을 받을 때도 키와 Touch ID를 요구하게 돼 무인 빌드가 멈춘다.
 
 ```ini

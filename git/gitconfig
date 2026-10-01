@@ -68,6 +68,15 @@
 	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 
+# 받기는 HTTPS + gh 토큰(사람 확인 없음), 보내기만 SSH + Touch ID. 근거는 git/README.md 「GitHub 접속」.
+# pushInsteadOf = git@github.com: 은 SSH 원격의 push 가 위 insteadOf 로 HTTPS 가 되지 않게 SSH 로 고정한다.
+# 무인 작업기 저장소는 원격을 ssh://git@github.com/… 로 두어 이 치환을 타지 않는다(배포 키로 받고 보냄).
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+[url "git@github.com:"]
+	pushInsteadOf = git@github.com:
+	pushInsteadOf = https://github.com/
+
 # 기계마다 다른 값(서명 키 경로 등)은 저장소 밖 로컬 파일에 둔다. 템플릿: git/gitconfig-local.example
 # 맨 끝에 둔다: git 은 나중에 읽은 값을 쓰므로 로컬 파일 값이 위 공통 값을 덮는다(예: 서명 키 경로).
 [include]

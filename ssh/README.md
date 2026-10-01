@@ -60,7 +60,10 @@ Host <별칭>
 ```
 git -C <저장소> config --local core.sshCommand \
   "ssh -o IdentityAgent=none -o IdentitiesOnly=yes -i ~/.ssh/<저장소>-deploy"
+git -C <저장소> remote set-url origin ssh://git@github.com/<소유자>/<저장소>.git
 ```
+
+- **원격은 `ssh://` 형식**: 공통 gitconfig가 `git@github.com:` 주소의 받기를 HTTPS(gh 토큰)로 바꾸므로(`../git/README.md`), 무인 저장소는 치환을 타지 않는 `ssh://` 형식으로 둬 받기도 배포 키로 한다.
 
 - **배포 키**: GitHub에서 계정이 아니라 **저장소 하나**에 등록하는 SSH 키. 같은 키는 GitHub 전체에서 저장소 하나에만 붙는다. "Allow write access"를 켜야 푸시도 된다.
 - `~/.ssh`의 **암호 없는 파일 키**로 만든다(`ssh-keygen -t ed25519 -N "" -f ~/.ssh/<저장소>-deploy`). Secretive 키는 에이전트(grok 등)가 띄운 ssh가 닿을 때마다 macOS가 다른 앱 데이터 접근 창을 띄우고, 허용해도 유지되지 않아 무인 pull·push가 멈춘다(2026-09-29). 파일 키라 복사될 수 있지만 배포 키라 영향이 그 저장소 하나로 한정되고, 새면 GitHub에서 그 키만 지운다.

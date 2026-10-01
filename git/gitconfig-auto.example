@@ -14,6 +14,8 @@
 # 배포 키(무인으로 푸시하는 저장소마다 하나): ssh-keygen -t ed25519 -N "" -C "<저장소>-deploy@<기계>" -f ~/.ssh/<저장소>-deploy
 #   GitHub 저장소 Deploy keys 에 Allow write access 로 등록하고, 저장소 로컬 설정으로 붙인다(ssh/README.md):
 #   git -C <저장소> config --local core.sshCommand "ssh -o IdentityAgent=none -o IdentitiesOnly=yes -i ~/.ssh/<저장소>-deploy"
+#   원격은 ssh:// 형식으로 둔다. 공통 gitconfig 의 받기 HTTPS 치환(git@github.com: → https)을 타지 않게 해 받기도 배포 키로 한다:
+#   git -C <저장소> remote set-url origin ssh://git@github.com/<소유자>/<저장소>.git
 
 # 선택: 이 기계만 다른 편집기를 쓸 때(전역 기본 nvim).
 # [core]
