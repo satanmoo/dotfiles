@@ -42,11 +42,16 @@ Host <별칭>
   User <계정>
   IdentityFile /Users/<사용자>/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/<그 호스트용 키 ID>.pub
   IdentitiesOnly yes
+  ControlMaster auto
+  ControlPath ~/.ssh/cm-%C
+  ControlPersist 4h
 ```
 
 - 예: 지휘 기계가 명령을 보내는 원격 작업기. `ssh <별칭>`으로 접속한다.
 - 주소·계정이 특정 환경의 값이라 공통 파일에 두지 않는다.
 - 접속하는 기계마다 Secretive 키를 **따로** 만들어 상대 서버에 등록한다. 한 기계를 잃어버리면 상대 서버에서 그 기계의 키 줄만 지우면 된다.
+- **연결 재사용(`ControlMaster auto`, `ControlPath`, `ControlPersist`)**: 첫 `ssh <별칭>`이 접속하고 이 기계에 마스터 프로세스로 남는다. 마스터는 `ControlPath`의 유닉스 소켓(`~/.ssh/cm-…`, 소유자만 접근)에서 기다리고, 다음 `ssh <별칭>`은 새로 접속하지 않고 그 연결 위에 명령을 얹는다(`auto`: 있으면 쓰고 없으면 만든다). 키가 Touch ID라 명령마다 승인하지 않으려고 쓴다. `ControlPersist 4h`는 마지막 사용 뒤 4시간 유지. 클라이언트만 해석하는 옵션이라 서버에는 오래 열린 연결 하나로 보인다. 상태 `ssh -O check <별칭>`, 재사용 중지 `ssh -O stop <별칭>`(새 요청만 막고 도는 명령은 끝까지 둔다), 즉시 끊기 `ssh -O exit <별칭>`.
+- **주의 — 재사용 연결은 처음 접속한 시점의 원격 환경을 쓴다.** 원격의 사용자 세션은 연결이 만들어질 때 한 번 생기고, 그 연결의 명령은 모두 그 세션의 환경을 물려받는다. Windows 원격은 세션이 만들어질 때 레지스트리에서 환경을 한 번 읽으므로, PATH 같은 환경 변수를 바꾸는 설치를 했다면 확인 전에 `ssh -O stop <별칭>`으로 재사용을 끝내고 새로 접속한다(2026-09-30 데스크톱 uv 설치). macOS 원격은 zsh가 명령마다 설정 파일을 다시 읽어 해당 없다.
 
 ## 저장소별 배포 키 (git 저장소 로컬 설정)
 

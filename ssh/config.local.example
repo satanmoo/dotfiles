@@ -12,3 +12,6 @@ Host github.com
 #   User <계정>
 #   IdentityFile /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/HOST_KEY_ID.pub
 #   IdentitiesOnly yes
+#   ControlMaster auto         # 연결 재사용(ssh/README.md): Touch ID를 한 번만
+#   ControlPath ~/.ssh/cm-%C
+#   ControlPersist 4h
