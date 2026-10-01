@@ -6,6 +6,14 @@
 [user]
     signingkey = /Users/YOUR_USER/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/SIGNING_KEY_ID.pub
 
+# 선택: Claude 데스크톱 앱을 켜 두는 대화형 기계(지휘기). 받기는 HTTPS + gh 토큰, 보내기만 SSH + Touch ID (git/README.md).
+# 무인 작업기에는 넣지 않는다 — 배포 키 대신 gh 토큰으로 받게 된다.
+# [url "https://github.com/"]
+#     insteadOf = git@github.com:
+# [url "git@github.com:"]
+#     pushInsteadOf = git@github.com:
+#     pushInsteadOf = https://github.com/
+
 # 선택: 이 기계만 다른 편집기를 쓸 때(전역 기본 nvim).
 # [core]
 #     editor = vim
