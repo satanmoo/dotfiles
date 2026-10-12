@@ -2,6 +2,7 @@
 # brew bundle --file ~/dotfiles/Brewfile
 
 tap "nikitabobko/tap"
+tap "laishulu/homebrew"
 
 # git/
 brew "git"
@@ -11,6 +12,9 @@ brew "gh"      # credential helper (/opt/homebrew/bin/gh)
 # zsh/
 brew "zinit"
 brew "neovim" # EDITOR=nvim
+
+# nvim/
+brew "macism" # Esc 누르면 영문 자판
 
 # ssh/, git 서명
 cask "secretive"
