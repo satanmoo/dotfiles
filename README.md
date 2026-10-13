@@ -9,7 +9,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
 | `zsh/` | `~/.zshenv`, `~/.zprofile`, `~/.zshrc`, `~/.p10k.zsh` | 심볼릭 링크 + `~/.zshenv.local`, `~/.zprofile.local`, `~/.zshrc.local` |
 | `aerospace/` | `~/.aerospace.toml` | 심볼릭 링크 |
 | `wezterm/` | `~/.config/wezterm/wezterm.lua` | 심볼릭 링크 |
-| `nvim/` | `~/.config/nvim/init.lua` | 심볼릭 링크 |
+| `nvim/` | `~/.config/nvim` (폴더) | 심볼릭 링크 |
 | `uv/` | `~/.config/uv/uv.toml`, uv tool 도구 | 심볼릭 링크 + `uv/tools.txt` 목록으로 설치 |
 | `alt-tab/` | AltTab 설정 | 설정 창 Import (링크 불가) |
 
@@ -34,7 +34,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
    ln -s ~/dotfiles/zsh/p10k.zsh ~/.p10k.zsh
    ln -s ~/dotfiles/aerospace/aerospace.toml ~/.aerospace.toml
    mkdir -p ~/.config/wezterm && ln -s ~/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
-   mkdir -p ~/.config/nvim && ln -s ~/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+   ln -s ~/dotfiles/nvim ~/.config/nvim
    mkdir -p ~/.config/uv && ln -s ~/dotfiles/uv/uv.toml ~/.config/uv/uv.toml
    ```
 3. 기계 값: `git/gitconfig-local.example`(무인 작업기는 `git/gitconfig-auto.example`) → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zshenv.local`·`~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
