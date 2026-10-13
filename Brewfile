@@ -16,6 +16,9 @@ brew "neovim" # EDITOR=nvim
 # nvim/
 brew "macism" # Esc 누르면 영문 자판
 
+# uv/
+brew "uv"
+
 # ssh/, git 서명
 cask "secretive"
 

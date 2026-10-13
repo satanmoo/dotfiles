@@ -1,0 +1,2 @@
+# uv가 받은 Python만 쓴다. Homebrew·macOS의 Python은 무시한다.
+python-preference = "only-managed"
