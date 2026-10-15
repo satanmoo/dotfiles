@@ -1,6 +1,8 @@
 # dotfiles
 
-satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장소를 쓰고, 기계마다 다른 값은 저장소 밖 `*.local` 파일에 둔다. 설정마다 **왜 이렇게 했는지**는 각 폴더 README에 있다.
+satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장소를 쓰고, 기계마다 다른 값은 저장소 밖 `*.local` 파일에 둔다.
+
+**사람 계정 전용**: 사람이 앞에 있어 Touch ID·로그인 키체인을 쓸 수 있는 계정에만 적용한다. 무인 실행은 작업기의 전용 OS 계정(회사 맥북 `sigmastudio-bot`)에서 돌고 이 설정을 쓰지 않는다 — 그 계정의 설정은 dev-environment `engine/README.md` 「무인 계정」. 설정마다 **왜 이렇게 했는지**는 각 폴더 README에 있다.
 
 | 폴더 | 적용 위치 | 방식 |
 | --- | --- | --- |
@@ -37,7 +39,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
    ln -s ~/dotfiles/nvim ~/.config/nvim
    mkdir -p ~/.config/uv && ln -s ~/dotfiles/uv/uv.toml ~/.config/uv/uv.toml
    ```
-3. 기계 값: `git/gitconfig-local.example`(무인 작업기는 `git/gitconfig-auto.example`) → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zshenv.local`·`~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
+3. 기계 값: `git/gitconfig-local.example` → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zshenv.local`·`~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
 4. AltTab: 설정 창 General → Import settings… → `alt-tab/alt-tab-config.plist`.
 5. AeroSpace를 한 번 실행한다. `start-at-login = true`라 이후 로그인 때 스스로 뜬다.
 

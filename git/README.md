@@ -40,10 +40,9 @@
 ```
 
 - **`gpg.format = ssh`, `commit.gpgsign`, `tag.gpgsign` — SSH 키로 모든 커밋·태그 서명**: GPG 키를 따로 관리하지 않고 Secretive(Secure Enclave)의 SSH 키로 서명한다. GitHub 계정에 **Signing Key**로 등록한 키로 서명하면 커밋에 Verified가 붙는다.
-- **`user.signingkey` — 기계당 하나, Secretive Protection Level = Notify**: Notify는 잠금이 풀린 동안 인증 없이 쓰이고 사용할 때 알림만 뜬다. 그래서 커밋할 때 Touch ID가 뜨지 않고, 에이전트의 무인 커밋도 서명된다. 서명 키만으로는 푸시할 수 없으므로 인증 키보다 풀어 두는 위험이 작다. 경로는 `~/.gitconfig-local`의 `user.signingkey`.
+- **`user.signingkey` — 기계당 하나, Secretive Protection Level = Notify**: Notify는 잠금이 풀린 동안 인증 없이 쓰이고 사용할 때 알림만 뜬다. 그래서 커밋할 때 Touch ID가 뜨지 않고, 대화형 세션의 에이전트가 하는 커밋도 서명된다. 서명 키만으로는 푸시할 수 없으므로 인증 키보다 풀어 두는 위험이 작다. 경로는 `~/.gitconfig-local`의 `user.signingkey`.
 - **서명은 에이전트가 한다**: `user.signingkey`는 공개키 경로일 뿐이고, 개인키는 Secure Enclave 안에 있다. git은 `ssh-keygen -Y sign`에 서명을 맡기고, `ssh-keygen`은 환경 변수 `SSH_AUTH_SOCK`이 가리키는 에이전트에 그 공개키로 서명을 요청한다(`~/.ssh/config`의 `IdentityAgent`는 ssh 접속에만 쓰인다). `SSH_AUTH_SOCK`은 `zsh/zshenv`가 Secretive 소켓으로 정한다(모든 zsh — 터미널, `ssh host '명령'`, 에이전트의 셸)(`../zsh/README.md`).
-  - SecretAgent가 꺼져 있거나 `SSH_AUTH_SOCK`이 없는 환경(zsh가 아닌 셸, launchd 작업 — 스크립트 안에서 정한다)이면 커밋이 `No private key found for public key "…pub"`로 실패한다. Secretive 앱을 열면 SecretAgent가 다시 뜬다.
-- **무인 작업기는 파일 키로 서명한다**(템플릿 `gitconfig-auto.example`): 에이전트가 띄운 git이 Secretive 소켓(`~/Library/Containers`, 다른 앱 데이터)에 닿으면 macOS가 접근 허용 창을 띄우고, 허용해도 유지되지 않아 무인 커밋이 멈춘다(2026-09-29). 작업기는 `~/.ssh`의 암호 없는 서명 키를 쓰고 `user.signingkey`에 **개인키 경로**를 적는다. 공개키 경로면 `ssh-keygen`이 다시 에이전트에 서명을 맡긴다.
+  - SecretAgent가 꺼져 있거나 `SSH_AUTH_SOCK`이 없는 환경(zsh가 아닌 셸)이면 커밋이 `No private key found for public key "…pub"`로 실패한다. Secretive 앱을 열면 SecretAgent가 다시 뜬다.
 - **`gpg.ssh.allowedSignersFile` → `~/.gitallowedsigners`**: 이 기계에서 `git log --show-signature`로 서명을 검증할 때만 쓰는 목록이다. 첫 칸(principal)은 이메일, 나머지는 공개키. GitHub의 Verified 판정과는 무관하다. 현재 서명 키만 둔다(과거 커밋은 로컬에서 검증하지 않는다). 다른 기계의 서명 키를 넣으면 그 기계의 커밋도 여기서 검증된다.
 
 ## GitHub 접속: 원격 주소가 전송 방식을 정한다
@@ -54,7 +53,6 @@
 | --- | --- | --- |
 | 내가 클론하는 저장소(공개·비공개, 내 것·남의 것 모두) — **받기**(fetch·pull·clone) | HTTPS (주소 치환) | gh 토큰, Touch ID 없음 |
 | 같은 저장소 — **보내기**(push) | SSH | Secretive 인증 키, Touch ID |
-| 무인 작업기의 저장소(사람 없이 받고 보냄) | SSH (`ssh://` 원격, 치환 안 탐) | 저장소별 파일 배포 키 |
 | 도구가 프로젝트 파일에 적힌 주소로 받는 의존성 — 공개(예: Xcode SPM의 Firebase, Unity·CocoaPods·Homebrew) | 적힌 대로, 대개 HTTPS | 없음(익명) |
 | 같은 경우인데 비공개(예: 프로젝트에 `https://github.com/<조직>/<비공개 패키지>.git`로 적힌 Unity 패키지) | HTTPS | gh 토큰 |
 
@@ -70,12 +68,8 @@
   - 왜: 받기는 원격을 바꾸지 않는다. 그런데 도구들이 사람 모르게 받는다 — Claude 데스크톱 앱은 열린 세션 저장소를 창 포커스·diff 갱신 때마다 백그라운드로 `git fetch`하고 끄는 설정이 없다(anthropics/claude-code#84698, #96661). 받기에 Touch ID 키를 쓰면 자리에 없을 때 서명 요청이 쌓여 뒤의 pull·push까지 막혔다(2026-10-01). 원격을 바꾸는 push에만 Touch ID를 남긴다.
   - `insteadOf`: `git@github.com:` 주소를 HTTPS로 바꿔 받는다 → 인증은 아래 gh 토큰(키체인). 원격 주소 자체는 그대로다(`git remote -v`가 fetch는 `https://`, push는 `git@`로 보인다).
   - `pushInsteadOf = git@github.com:`: git은 push 주소에 `pushInsteadOf`가 맞지 않으면 `insteadOf`를 적용한다. 그러면 SSH 원격의 push도 HTTPS가 되므로 SSH 주소를 SSH로 고정한다. `= https://github.com/` 줄은 HTTPS로 클론한 저장소의 push를 SSH로 보낸다.
-  - gh 토큰은 로그인 키체인에 있다. 로그인 키체인이 잠겨 보이는 곳(다른 기계에서 `ssh <맥> '…'`로 들어온 셸)에서는 받기가 인증에 실패한다 — 원격 맥의 대화형 저장소는 그 맥에서 직접 받거나, 아래 예외 형식으로 둔다.
-- **예외: 무인 작업기의 저장소는 원격을 `ssh://git@github.com/<소유자>/<저장소>.git` 형식으로 둔다.** 치환은 `git@github.com:`·`https://github.com/`로 시작하는 주소만 바꾸므로 `ssh://` 주소는 받기·보내기 모두 SSH 그대로다. 그 저장소의 `core.sshCommand`(파일 배포 키, `gitconfig-auto.example`)로 사람 없이 받고 보낸다. 받기가 gh 토큰으로 바뀌면 배포 키로 좁혀 둔 권한이 계정 전체 토큰으로 넓어지고, ssh 셸에서는 키체인이 잠겨 실패한다.
-  ```
-  git -C <저장소> remote set-url origin ssh://git@github.com/<소유자>/<저장소>.git
-  ```
-- 남이 적은 HTTPS 주소는 바꾸지 않는다. 바꾸려면 조직별 치환 목록이 필요하고, 공개 의존성을 받을 때도 키와 Touch ID를 요구하게 돼 무인 빌드가 멈춘다.
+  - gh 토큰은 로그인 키체인에 있다. 로그인 키체인이 잠겨 보이는 곳(다른 기계에서 `ssh <맥> '…'`로 들어온 셸)에서는 받기가 인증에 실패한다 — 사람 계정의 저장소는 그 맥에 로그인한 화면에서 받는다.
+- 남이 적은 HTTPS 주소는 바꾸지 않는다. 바꾸려면 조직별 치환 목록이 필요하고, 공개 의존성을 받을 때도 키와 Touch ID를 요구하게 된다.
 
 ```ini
 [credential "https://github.com"]
@@ -105,7 +99,7 @@
 
 ## SSH
 
-SSH 키 고정·저장소별 배포 키·포트 우회는 `ssh/README.md`. 위 전송 규칙은 그 설정이 전제다.
+SSH 키 고정·포트 우회는 `ssh/README.md`. 위 전송 규칙은 그 설정이 전제다.
 
 ## gh CLI (dotfiles가 관리하지 않음 — 새 기계에서 실행)
 

@@ -21,7 +21,7 @@ ln -s ~/dotfiles/zsh/p10k.zsh ~/.p10k.zsh
 - **`zshenv`**: 모든 zsh에서. 터미널뿐 아니라 `ssh host '명령'`, 에이전트·MCP 서버를 띄우는 zsh, zsh 스크립트도 읽는다. 어디서든 필요한 환경 변수만. PATH는 원칙적으로 두지 않는다 — 로그인 셸이면 뒤이어 `/etc/zprofile`의 `path_helper`가 순서를 다시 짠다. 예외는 비로그인 셸에서도 찾아야 하는 도구의 PATH(아래 기계별 파일).
 - **`zprofile`**: 로그인 셸에서 한 번. PATH·환경 변수처럼 한 번 정하면 되는 것. `/etc/zprofile`의 `path_helper`가 PATH를 macOS 기본 순서로 다시 짠 **뒤에** 읽히므로, 여기서 앞에 넣은 경로가 유지된다.
 - **`zshrc`**: 대화형 셸에서. 프롬프트·플러그인·자동완성·히스토리·별칭. `[[ -o interactive ]] || return` 아래는 대화형이 아니면 건너뛴다.
-- `ssh host '명령'`은 `zshenv`만 읽는다. launchd 작업은 zsh 파일을 하나도 읽지 않는다(bash 스크립트면 더더욱). 무인 스크립트는 PATH·`SSH_AUTH_SOCK`을 스크립트 안에서 정하거나 절대 경로를 쓴다.
+- `ssh host '명령'`은 `zshenv`만 읽는다. launchd 작업은 zsh 파일을 하나도 읽지 않는다. 무인 실행은 이 설정이 없는 전용 계정에서 돈다(`../README.md`).
 
 ## zshenv
 
