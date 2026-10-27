@@ -1,4 +1,1 @@
 # uv tool install로 까는 도구. 한 줄에 하나, 주석은 줄 맨 앞 #만(xargs로 읽는다).
-
-# nvim/ Python 언어 서버
-pyrefly

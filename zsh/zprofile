@@ -4,7 +4,7 @@ typeset -U PATH path FPATH fpath
 # Homebrew: /opt/homebrew/bin을 macOS 기본 도구보다 앞에
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
-# uv tool install로 깐 도구 (pyrefly 등)
+# uv tool install로 깐 도구
 path=(~/.local/bin $path)
 
 # Load local config

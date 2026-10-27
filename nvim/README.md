@@ -18,6 +18,7 @@ ln -s ~/dotfiles/nvim ~/.config/nvim
 - **설치는 nvim 0.12 내장 `vim.pack`**: 플러그인 관리자를 따로 깔지 않는다. 플러그인은 `~/.local/share/nvim/site/pack/core/opt/`에 받고, 받은 커밋은 `nvim-pack-lock.json`에 적힌다. 다른 맥은 pull 후 nvim을 처음 열 때 설치 여부를 묻고, 잠금 파일의 커밋 그대로 받는다.
 - **업데이트**: `:lua vim.pack.update()` → 바뀐 내용을 보고 `:write`로 확정(`:quit`은 취소) → `nvim-pack-lock.json`을 커밋한다.
 - 플러그인 저장소의 마지막 커밋은 2024-12다. 동작은 하지만 새 nvim 기능을 따라오지 못하면 다른 테마로 바꾼다.
+- **Cursor 안에서는 건너뛴다(`if not vim.g.vscode`)**: Cursor의 vscode-neovim 확장은 화면 없는 nvim을 띄워 이 `init.lua`를 그대로 읽는다. 화면은 Cursor가 그리므로 테마는 쓸모없이 플러그인만 읽게 된다. `vim.g.vscode`는 vscode-neovim 안에서만 켜진다.
 
 ## 입력 모드를 나가면 영문 자판
 
@@ -25,25 +26,6 @@ ln -s ~/dotfiles/nvim ~/.config/nvim
 - **macism**: `brew install laishulu/homebrew/macism`(Brewfile). `im-select`는 한글 같은 CJK 입력기에서 ABC로 바꿀 때 메뉴 막대만 바뀌고 실제 입력은 그대로인 경우가 있어 macism을 쓴다. 영문 자판 ID는 `macism`을 인자 없이 실행해 확인한다(ABC가 아니라 U.S. 자판이면 `com.apple.keylayout.US`).
 - `vim.system`으로 비동기 실행해 Esc가 늦어지지 않는다. macism이 없는 기계에서는 이 부분을 건너뛴다.
 
-## Python 언어 서버: Pyrefly
+## 언어 서버 없음
 
-- **설치**: `uv tool install pyrefly`(`../uv/tools.txt`). 실행 파일은 `~/.local/bin`에 생기고, `zsh/zprofile`이 이 폴더를 PATH에 넣는다. pyrefly가 없는 기계에서는 이 부분을 건너뛴다.
-- **플러그인 없이 연결**: nvim 0.11+의 `vim.lsp.config`·`vim.lsp.enable`을 쓴다. 값은 nvim-lspconfig의 `lsp/pyrefly.lua`를 옮겼다. 프로젝트 루트는 `pyproject.toml`·`.git` 등이 있는 가장 가까운 폴더다.
-- **고른 이유**: 2026-10에 ty(Astral)와 비교했다. 둘 다 Rust라 빠르지만 Pyrefly는 1.x 안정판이고 ty는 아직 베타다. ty가 stable이 되면 다시 검토한다([#3](https://github.com/satanmoo/dotfiles/issues/3)).
-- **ty로 바꾸려면**: `cmd = { 'ty', 'server' }`, root_markers의 `pyrefly.toml` → `ty.toml`, `vim.lsp.enable('ty')`. `uv/tools.txt`도 바꾼다.
-
-LSP가 붙으면 nvim 기본 키로 쓴다(따로 매핑하지 않았다).
-
-| 동작 | 키 |
-| --- | --- |
-| 정의로 이동 | `Ctrl-]`, Ctrl+클릭 |
-| 뒤로 / 앞으로 | `Ctrl-o` / `Ctrl-i` (Ctrl+우클릭도 뒤로) |
-| 사용처 (quickfix 목록) | `grr` |
-| 구현으로 이동 | `gri` |
-| 이름 바꾸기 | `grn` |
-| 코드 액션 | `gra` |
-| 문서 보기 | `K` |
-| 파일 심볼 목록 | `gO` |
-
-- 기본 `gd`는 LSP가 아니라 같은 파일 안에서 글자로 찾는다.
-- 터미널은 ⌘ 키를 nvim에 넘기지 못하므로 IntelliJ의 ⌘+클릭은 쓸 수 없다. 붙었는지는 `:checkhealth vim.lsp`로 본다.
+Python·C# 편집과 자동완성은 Cursor가 맡는다. 터미널 nvim은 빠른 수정용이라 언어 서버를 붙이지 않는다(2026-10-27에 Pyrefly를 뺐다).

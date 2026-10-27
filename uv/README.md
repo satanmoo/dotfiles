@@ -31,4 +31,4 @@ uv tool upgrade --all
 ```
 
 - 실행 파일은 `~/.local/bin`에 생긴다. 이 폴더는 `zsh/zprofile`이 PATH에 넣는다.
-- 지금 목록: `pyrefly`(nvim Python 언어 서버, `../nvim/README.md`).
+- 지금 목록: 없음(2026-10-27에 nvim에서 Pyrefly를 빼며 비웠다).

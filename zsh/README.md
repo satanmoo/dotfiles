@@ -31,7 +31,7 @@ ln -s ~/dotfiles/zsh/p10k.zsh ~/.p10k.zsh
 
 - **`typeset -U PATH path FPATH fpath`**: 같은 경로는 처음 것만 남긴다. `brew shellenv`와 `/etc/paths.d/homebrew`가 `/opt/homebrew/bin`을 두 번 넣고, 셸 안에서 셸을 띄우면 물려받은 PATH에 같은 경로가 다시 붙기 때문이다. `export PATH=...`처럼 문자열 쪽으로 넣는 값까지 거르려면 배열(`path`)과 문자열(`PATH`) 둘 다에 걸어야 한다.
 - **`brew shellenv`**: `/opt/homebrew/bin`을 `/usr/bin`보다 앞에 둔다(Homebrew git이 Apple git보다 먼저 잡힌다). Homebrew 자동완성 폴더(`/opt/homebrew/share/zsh/site-functions`)도 fpath 앞에 넣는다.
-- **`~/.local/bin`**: `uv tool install`이 실행 파일을 넣는 곳(`../uv/README.md`). Homebrew 다음에 앞에 붙이므로 같은 이름이면 uv tool 쪽이 먼저 잡힌다. nvim은 셸의 PATH를 물려받아 여기서 pyrefly를 찾는다.
+- **`~/.local/bin`**: `uv tool install`이 실행 파일을 넣는 곳(`../uv/README.md`). Homebrew 다음에 앞에 붙이므로 같은 이름이면 uv tool 쪽이 먼저 잡힌다.
 
 ## zshrc
 
