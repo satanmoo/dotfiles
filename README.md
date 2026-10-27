@@ -49,4 +49,5 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
 
 - 링크된 파일은 이 저장소에서 고치고 커밋한다. 다른 맥은 `git -C ~/dotfiles pull`로 받는다(링크라 pull만으로 적용된다).
 - AltTab은 설정 창에서 바꾼 뒤 Export settings…로 `alt-tab/alt-tab-config.plist`를 덮어쓰고 커밋한다.
+- Cursor 설정 창에서 바꾼 값은 링크된 `cursor/settings.json`에 바로 들어가니 커밋만 한다. 확장을 바꿨으면 `cursor/extensions.txt`를 직접 고친다(`cursor/README.md`).
 - 커밋은 서명된다(Secretive). SecretAgent가 꺼져 있으면 커밋이 실패하니 Secretive를 연다.
