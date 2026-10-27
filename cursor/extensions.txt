@@ -1,0 +1,4 @@
+# Cursor 확장. 한 줄에 하나, 주석은 줄 맨 앞 #만(xargs로 읽는다).
+
+# vim 키: 실제 nvim을 뒤에서 띄워 ~/.config/nvim/init.lua를 쓴다
+asvetliakov.vscode-neovim

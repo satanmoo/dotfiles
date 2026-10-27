@@ -13,6 +13,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
 | `wezterm/` | `~/.config/wezterm/wezterm.lua` | 심볼릭 링크 |
 | `nvim/` | `~/.config/nvim` (폴더) | 심볼릭 링크 |
 | `uv/` | `~/.config/uv/uv.toml`, uv tool 도구 | 심볼릭 링크 + `uv/tools.txt` 목록으로 설치 |
+| `cursor/` | `~/Library/Application Support/Cursor/User/settings.json`, Cursor 확장 | 심볼릭 링크 + `cursor/extensions.txt` 목록으로 설치 |
 | `alt-tab/` | AltTab 설정 | 설정 창 Import (링크 불가) |
 
 `Brewfile`은 이 설정들이 쓰는 도구만 담는다. 기계마다 다른 앱은 넣지 않는다.
@@ -42,6 +43,7 @@ satanmoo의 맥 공통 설정. 개인 맥북과 회사 맥북이 같은 저장�
 3. 기계 값: `git/gitconfig-local.example` → `~/.gitconfig-local`, `ssh/config.local.example` → `~/.ssh/config.local`(`chmod 600`), 필요하면 `zsh/*.local.example` → `~/.zshenv.local`·`~/.zprofile.local`·`~/.zshrc.local`. Secretive에 이 기계 키를 만들고 GitHub·`~/.gitallowedsigners`에 등록한다(`git/README.md`, `ssh/README.md`).
 4. AltTab: 설정 창 General → Import settings… → `alt-tab/alt-tab-config.plist`.
 5. AeroSpace를 한 번 실행한다. `start-at-login = true`라 이후 로그인 때 스스로 뜬다.
+6. Cursor를 한 번 실행해 설정 폴더를 만든 뒤 링크·확장·키 반복을 설정한다(`cursor/README.md`).
 
 ## 고칠 때
 

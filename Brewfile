@@ -26,3 +26,6 @@ cask "secretive"
 cask "nikitabobko/tap/aerospace"
 cask "alt-tab"
 cask "wezterm"
+
+# cursor/
+cask "cursor"
